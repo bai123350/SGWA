@@ -1,0 +1,7 @@
+{
+    "r.linting.maxLineLength": 200,
+    "r.editor.tabSize": 4,
+    "r.rterm.linux": "/home/jin/anaconda3/bin/radian",
+    "r.session.data.rowLimit": 0,
+    "r.rpath.linux": "/home/jin/anaconda3/bin/R"
+}
