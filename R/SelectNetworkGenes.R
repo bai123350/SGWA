@@ -52,7 +52,7 @@ SelectNetworkGenes <- function(
 
   # 处理不同的选择策略
   if (gene_select == "fraction") {
-    # 为了节省内存，分块对计数��阵进行二值化
+    # 为了节省内存，分块对计数矩阵进行二值化
     n_chunks <- ceiling(ncol(expr_mat) / 10000)
 
     if (n_chunks == 1) {

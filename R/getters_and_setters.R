@@ -1,18 +1,18 @@
 ############################
-# Active WGCNA
+# 活动 WGCNA
 ###########################
 
 #' SetActiveWGCNA
 #'
-#' @param seurat_obj A Seurat object
-#' @param wgcna_name The name of the hdWGCNA experiment in the seurat_obj@misc slot
+#' @param seurat_obj 一个 Seurat 对象
+#' @param wgcna_name seurat_obj@misc 插槽中 hdWGCNA 实验的名称
 #' @keywords scRNA-seq
 #' @export
 SetActiveWGCNA <- function(seurat_obj, wgcna_name) {
-  # set the active_wgcna variable
+  # 设置 active_wgcna 变量
   seurat_obj@misc$active_wgcna <- wgcna_name
 
-  # initialize empty list for this WGCNA if it doesn't exist yet
+  # 如果该 WGCNA 的空列表尚不存在，则初始化它
   if (!(wgcna_name %in% names(seurat_obj@misc))) {
     seurat_obj@misc[[seurat_obj@misc$active_wgcna]] <- list()
   }
@@ -21,7 +21,7 @@ SetActiveWGCNA <- function(seurat_obj, wgcna_name) {
 
 #' GetActiveWGCNA
 #'
-#' @param seurat_obj A Seurat object
+#' @param seurat_obj 一个 Seurat 对象
 #' @keywords scRNA-seq
 #' @export
 GetActiveWGCNA <- function(seurat_obj) {
@@ -30,7 +30,7 @@ GetActiveWGCNA <- function(seurat_obj) {
 
 #' GetActiveWGCNAName
 #'
-#' @param seurat_obj A Seurat object
+#' @param seurat_obj 一个 Seurat 对象
 #' @keywords scRNA-seq
 #' @export
 GetActiveWGCNAName <- function(seurat_obj) {
@@ -39,59 +39,59 @@ GetActiveWGCNAName <- function(seurat_obj) {
 
 #' CheckWGCNAName
 #'
-#' @param seurat_obj A Seurat object
+#' @param seurat_obj 一个 Seurat 对象
 #' @keywords scRNA-seq
 #' @export
 CheckWGCNAName <- function(seurat_obj, wgcna_name) {
   check <- wgcna_name %in% names(seurat_obj@misc)
   if (!check) {
-    stop(paste0("Invalid wgcna_name supplied: ", wgcna_name))
+    stop(paste0("提供的 wgcna_name 无效: ", wgcna_name))
   }
 }
 
 
-# # get any WGCNA data, but by default get the active
+# # 获取任何 WGCNA 数据，但默认获取活动数据
 # GetWGCNA <- function(seurat_obj, wgcna_name=NULL){
 
-#   # test if wgcna_name is valid (TODO)
+#   # 测试 wgcna_name 是否有效 (TODO)
 
-#   # get data from active assay if wgcna_name is not given
+#   # 如果未提供 wgcna_name，则从活动分析中获取数据
 #   if(is.null(wgcna_name)){wgcna_name <- seurat_obj@misc$active_wgcna}
 
 #   seurat_obj@misc[[wgcna_name]]
 # }
 
 ############################
-# metacell object
+# 元细胞对象
 ###########################
 
 #' SetMetacellObject
 #'
-#' @param seurat_obj A Seurat object
-#' @param metacell_obj metacell Seurat object
-#' @param wgcna_name The name of the hdWGCNA experiment in the seurat_obj@misc slot
+#' @param seurat_obj 一个 Seurat 对象
+#' @param metacell_obj 元细胞 Seurat 对象
+#' @param wgcna_name seurat_obj@misc 插槽中 hdWGCNA 实验的名称
 #' @keywords scRNA-seq
 #' @export
 SetMetacellObject <- function(seurat_obj, metacell_obj, wgcna_name = NULL) {
-  # get data from active assay if wgcna_name is not given
+  # 如果未提供 wgcna_name，则从活动分析中获取数据
   if (is.null(wgcna_name)) {
     wgcna_name <- seurat_obj@misc$active_wgcna
   }
   CheckWGCNAName(seurat_obj, wgcna_name)
 
-  # add metacell obj to Seurat obj
+  # 将元细胞对象添加到 Seurat 对象
   seurat_obj@misc[[wgcna_name]]$wgcna_metacell_obj <- metacell_obj
   seurat_obj
 }
 
 #' GetMetacellObject
 #'
-#' @param seurat_obj A Seurat object
-#' @param wgcna_name The name of the hdWGCNA experiment in the seurat_obj@misc slot
+#' @param seurat_obj 一个 Seurat 对象
+#' @param wgcna_name seurat_obj@misc 插槽中 hdWGCNA 实验的名称
 #' @keywords scRNA-seq
 #' @export
 GetMetacellObject <- function(seurat_obj, wgcna_name = NULL) {
-  # get data from active assay if wgcna_name is not given
+  # 如果未提供 wgcna_name，则从活动分析中获取数据
   if (is.null(wgcna_name)) {
     wgcna_name <- seurat_obj@misc$active_wgcna
   }
@@ -109,36 +109,36 @@ GetMetacellObject <- function(seurat_obj, wgcna_name = NULL) {
 }
 
 ############################
-# WGCNA genes
+# WGCNA 基因
 ###########################
 
 #' SetWGCNAGenes
 #'
-#' @param seurat_obj A Seurat object
-#' @param gene_list vector of genes to be used for WGCNA
-#' @param wgcna_name The name of the hdWGCNA experiment in the seurat_obj@misc slot
+#' @param seurat_obj 一个 Seurat 对象
+#' @param gene_list 用于 WGCNA 的基因向量
+#' @param wgcna_name seurat_obj@misc 插槽中 hdWGCNA 实验的名称
 #' @keywords scRNA-seq
 #' @export
 SetWGCNAGenes <- function(seurat_obj, gene_list, wgcna_name = NULL) {
-  # get data from active assay if wgcna_name is not given
+  # 如果未提供 wgcna_name，则从活动分析中获取数据
   if (is.null(wgcna_name)) {
     wgcna_name <- seurat_obj@misc$active_wgcna
   }
   CheckWGCNAName(seurat_obj, wgcna_name)
 
-  # add gene list to Seurat obj
+  # 将基因列表添加到 Seurat 对象
   seurat_obj@misc[[wgcna_name]]$wgcna_genes <- gene_list
   seurat_obj
 }
 
 #' GetWGCNAGenes
 #'
-#' @param seurat_obj A Seurat object
-#' @param wgcna_name The name of the hdWGCNA experiment in the seurat_obj@misc slot
+#' @param seurat_obj 一个 Seurat 
+#' @param wgcna_name seurat_obj@misc 插槽中 hdWGCNA 实验的名称
 #' @keywords scRNA-seq
 #' @export
 GetWGCNAGenes <- function(seurat_obj, wgcna_name = NULL) {
-  # get data from active assay if wgcna_name is not given
+  # 如果未提供 wgcna_name，则从活动分析中获取数据
   if (is.null(wgcna_name)) {
     wgcna_name <- seurat_obj@misc$active_wgcna
   }
@@ -154,25 +154,24 @@ GetWGCNAGenes <- function(seurat_obj, wgcna_name = NULL) {
 
 #' SetDatExpr
 #'
-#' This function specifies the gene expression matrix for co-expression network analysis.
+#' 此函数指定用于共表达网络分析的基因表达矩阵。
 #'
-#' @param seurat_obj A Seurat object
-#' @param group_name A string containing a group present in the provided group.by column or in the Seurat Idents. A character vector can be provided to select multiple groups at a time.
-#' @param use_metacells A logical determining if we use the metacells (TRUE) or the full expression matrix (FALSE)
-#' @param group.by A string containing the name of a column in the Seurat object with cell groups (clusters, cell types, etc). If NULL (default), hdWGCNA uses the Seurat Idents as the group.
-#' @param multi.group.by A string containing the name of a column in the Seurat object with groups for consensus WGCNA (dataset, sample, condition, etc)
-#' @param multi_group_name A string containing the name of a group present in the multi.group.by column.
-#' @param assay The name of the assay in the Seurat object
-#' @param slot Slot to extract data for aggregation. Default = 'counts'. Slot is used with Seurat v4 instead of layer.
-#' @param layer Layer to extract data for aggregation. Default = 'counts'. Layer is used with Seurat v5 instead of slot.
-#' @param mat A Matrix containing gene expression data. Supplying a matrix using this parameter ignores other options. This is almost exclusively used for pseudobulk analysis.
-#' @param features A list of features to use to override the features that have been previously set.
-#' @param wgcna_name A string containing the name of the WGCNA slot in seurat_obj@misc. Default = NULL which retrieves the currently active WGCNA data
+#' @param seurat_obj 一个 Seurat 对象
+#' @param group_name 一个字符串，包含提供的 group.by 列中或 Seurat Idents 中的一个组。可以提供一个字符向量以一次选择多个组。
+#' @param use_metacells 一个逻辑值，确定我们是使用元细胞 (TRUE) 还是完整的表达矩阵 (FALSE)
+#' @param group.by 一个字符串，包含 Seurat 对象中具有细胞组（簇、细胞类型等）的列的名称。如果为 NULL（默认值），hdWGCNA 使用 Seurat Idents 作为组。
+#' @param multi.group.by 一个字符串，包含 Seurat 对象中具有用于共识 WGCNA 的组（数据集、样本、条件等）的列的名称
+#' @param multi_group_name 一个字符串，包含 multi.group.by 列中存在的组的名称。
+#' @param assay Seurat 对象中分析的名称
+#' @param slot 用于提取聚合数据的插槽。默认 = 'counts'。插槽与 Seurat v4 一起使用，而不是层。
+#' @param layer 用于提取聚合数据的层。默认 = 'counts'。层与 Seurat v5 一起使用，而不是插槽。
+#' @param mat 一个包含基因表达数据的矩阵。使用此参数提供矩阵会忽略其他选项。这几乎专门用于伪批量分析。
+#' @param features 要用于覆盖先前设置的特征的特征列表。
+#' @param wgcna_name 一个字符串，包含 seurat_obj@misc 中 WGCNA 插槽的名称。默认 = NULL，它检索当前活动的 WGCNA 数据
 #' @details
-#' SetDatExpr is a critical function of the hdWGCNA pipeline that determines the gene expession
-#' matrix that will be used for network analysis. We typically use this function to select a
-#' cell type or group of cell types for network analysis using the group.by parameter, but we provide
-#' additional parameters for further customization.
+#' SetDatExpr 是 hdWGCNA 管道的一个关键函数，它确定将用于网络分析的基因表达矩阵。
+#' 我们通常使用此函数使用 group.by 参数选择一个细胞类型或一组细胞类型进行网络分析，但我们提供
+#' 用于进一步定制的其他参数。
 #' @keywords scRNA-seq
 #' @export
 SetDatExpr <- function(
@@ -190,7 +189,7 @@ SetDatExpr <- function(
     features = NULL,
     wgcna_name = NULL,
     ...) {
-  # get data from active assay if wgcna_name is not given
+  # 如果未提供 wgcna_name，则从活动分析中取数据
   if (is.null(wgcna_name)) {
     wgcna_name <- seurat_obj@misc$active_wgcna
   }
@@ -198,20 +197,20 @@ SetDatExpr <- function(
 
   if (is.null(assay)) {
     assay <- DefaultAssay(seurat_obj)
-    warning(paste0("assay not specified, trying to use assay ", assay))
+    warning(paste0("未指定分析，尝试使用分析 ", assay))
   }
 
-  # check that selected assay is in the seurat object
+  # 检查所选分析是否在 seurat 对象中
   if (!(assay %in% names(seurat_obj))) {
-    stop(paste0("Invalid choice of assay: ", assay, " not found in Assays(seurat_obj)."))
+    stop(paste0("无效的分析选择: ", assay, " 在 Assays(seurat_obj) 中未找到。"))
   }
 
-  # check that slot is valid
+  # 检查插槽是否有效
   if (!(slot %in% c("counts", "data", "scale.data"))) {
-    stop("Invalid choice of slot. Valid choices are counts, data, or scale.data.")
+    stop("无效的插槽选择。有效选择是 counts、data 或 scale.data。")
   }
 
-  # get parameters from seurat object
+  # 从 seurat 对象获取参数
   params <- GetWGCNAParams(seurat_obj, wgcna_name)
 
   if (is.null(features)) {
@@ -220,82 +219,82 @@ SetDatExpr <- function(
     if (all(features %in% rownames(seurat_obj))) {
       genes_use <- features
     } else {
-      stop("Some features not found in rownames(seurat_obj).")
+      stop("在 rownames(seurat_obj) 中未找到某些特征。")
     }
   }
 
-  # was a matrix supplied?
+  # 是否提供了矩阵？
   if (is.null(mat)) {
-    # get metacell object
+    # 获取元细胞对象
     m_obj <- GetMetacellObject(seurat_obj, wgcna_name)
 
-    # use metacells or whole seurat object?
+    # 使用元细胞还是整个 seurat 对象？
     if (use_metacells & !is.null(m_obj)) {
       s_obj <- m_obj
     } else {
       if (is.null(m_obj)) {
-        warning("Metacell Seurat object not found. Using full Seurat object instead.")
+        warning("未找到元细胞 Seurat 对象。改用完整的 Seurat 对象。")
       }
       s_obj <- seurat_obj
     }
 
-    # get the metadata from the seurat object:
+    # 从 seurat 对象获取元数据：
     seurat_meta <- s_obj@meta.data
 
-    # check the group.by params
+    # 检查 group.by 参数
     if (!is.null(group.by)) {
-      # check that group.by is in the Seurat object & in the metacell object:
+      # 检查 group.by 是否在 Seurat 对象和元细胞对象中：
       if (!(group.by %in% colnames(s_obj@meta.data))) {
         m_cell_message <- ""
         if (use_metacells) {
           m_cell_message <- "metacell"
         }
-        stop(paste0(group.by, " not found in the meta data of the ", m_cell_message, " Seurat object"))
+        stop(paste0(group.by, " 在 ", m_cell_message, " Seurat 对象的元数据中未找到"))
       }
 
-      # check that the selected groups are in the Seurat object:
+      # 检查所选组是否在 Seurat 对象中：
       if (!all(group_name %in% s_obj@meta.data[[group.by]])) {
         groups_not_found <- group_name[!(group_name %in% s_obj@meta.data[[group.by]])]
         stop(
-          paste0("Some groups in group_name are not found in the seurat_obj: ", paste(groups_not_found, collapse = ", "))
+          paste0("group_name 中的某些组在 seurat_obj 中未找到: ", paste(groups_not_found, collapse = ", "))
         )
       }
     }
 
-    # check the multi.group.by params
+    # 检查 multi.group.by 参数
     if (!is.null(multi.group.by)) {
-      # check that group.by is in the Seurat object & in the metacell object:
+      # 检查 group.by 是否在 Seurat 对象和元细胞对象中：
       if (!(multi.group.by %in% colnames(s_obj@meta.data))) {
         m_cell_message <- ""
         if (use_metacells) {
           m_cell_message <- "metacell"
         }
-        stop(paste0(multi.group.by, " not found in the meta data of the ", m_cell_message, " Seurat object"))
+        stop(paste0(multi.group.by, " 在 ", m_cell_message, " Seurat 对象的元数据中未找到"))
       }
 
-      # check that the selected groups are in the Seurat object:
+      # 检查所选组是否在 Seurat 对象中：
       if (!all(multi_group_name %in% s_obj@meta.data[[multi.group.by]])) {
         groups_not_found <- multi_group_name[!(multi_group_name %in% s_obj@meta.data[[multi.group.by]])]
         stop(
-          paste0("Some groups in group_name are not found in the seurat_obj: ", paste(groups_not_found, collapse = ", "))
+          paste0("group_name 中的某些组在 seurat_obj 中未找到: ", paste(groups_not_found, collapse = ", "))
         )
       }
     }
 
-    # columns to group by for cluster/celltype
+    # 用于按簇/细胞类型分组的列 # nolint
     if (!is.null(group.by)) {
       seurat_meta <- seurat_meta %>% subset(get(group.by) %in% group_name)
     }
 
-    # subset further if multiExpr:
+    # 如果是 multiExpr，则进一步子集化：
     if (!is.null(multi.group.by)) {
       seurat_meta <- seurat_meta %>% subset(get(multi.group.by) %in% multi_group_name)
     }
 
-    # get list of cells to use
+    # 获取要使用的细胞列表
     cells <- rownames(seurat_meta)
 
-    # get expression data from seurat obj
+    # 从 seurat 对象获取表达数据
     if (CheckSeurat5()) {
       exp <- SeuratObject::LayerData(s_obj, assay = assay, layer = layer)
     } else {
@@ -303,22 +302,22 @@ SetDatExpr <- function(
     }
     datExpr <- as.data.frame(exp)[genes_use, cells]
 
-    # transpose data
+    # 转置数据
     datExpr <- as.data.frame(t(datExpr))
   } else {
     datExpr <- mat
 
-    # cast it to a dataframe
+    # 将其转换为数据框
     if (any(class(datExpr) != "data.frame")) {
       datExpr <- as.data.frame(datExpr)
     }
 
-    # are the colnames genes?
+    # colnames 是基因吗？
     if (!all(colnames(datExpr) %in% rownames(seurat_obj))) {
-      stop("colnames of the provided matrix are invalid. Make sure that the colnames are features (genes), and that all of these features are in the seurat_obj")
+      stop("提供的矩阵的 colnames 无效。请确保 colnames 是特征（基因），并且所有这些特征都在 seurat_obj 中")
     }
 
-    # subset the datExpr by the WGCNA genes:
+    # 按 WGCNA 基因对 datExpr 进行子集化：
     genes_use <- colnames(datExpr)
     # datExpr <- datExpr[,genes_use]
   }
@@ -327,10 +326,10 @@ SetDatExpr <- function(
     gene_list <- genes_use[WGCNA::goodGenes(datExpr, ...)]
     datExpr <- datExpr[, gene_list]
 
-    # update the WGCNA gene list:
+    # 更新 WGCNA 基因列表：
     seurat_obj <- SetWGCNAGenes(seurat_obj, gene_list, wgcna_name)
 
-    # set the datExpr in the Seurat object
+    # 在 Seurat 对象中设置 datExpr
     seurat_obj@misc[[wgcna_name]]$datExpr <- datExpr
     out <- seurat_obj
   } else {
@@ -343,13 +342,13 @@ SetDatExpr <- function(
 
 #' GetDatExpr
 #'
-#' This function gets the WGCNA expression matrix.
+#' 此函数获取 WGCNA 表达矩阵。
 #'
-#' @param seurat_obj A Seurat object
+#' @param seurat_obj 一个 Seurat 对象
 #' @keywords scRNA-seq
 #' @export
 GetDatExpr <- function(seurat_obj, wgcna_name = NULL) {
-  # get data from active assay if wgcna_name is not given
+  # 如果未提供 wgcna_name，则从活动分析中获取数据
   if (is.null(wgcna_name)) {
     wgcna_name <- seurat_obj@misc$active_wgcna
   }
@@ -361,20 +360,19 @@ GetDatExpr <- function(seurat_obj, wgcna_name = NULL) {
 
 #' SetMultiExpr
 #'
-#' This function sets up the expression matrix input for consensus WGCNA based on
-#' the metacell expression matrix, the full expression matrix, or a provided pseudobulk expression matrix.
+#' 此函数根据元细胞表达矩阵、完整表达矩阵或提供的伪批量表达矩阵，为共识 WGCNA 设置表达矩阵输入。
 #'
-#' @param seurat_obj A Seurat object
-#' @param group_name A string containing a group present in the provided group.by column or in the Seurat Idents.
-#' @param use_metacells A logical determining if we use the metacells (TRUE) or the full expression matrix (FALSE)
-#' @param group.by A string containing the name of a column in the Seurat object with cell groups (clusters, cell types, etc). If NULL (default), hdWGCNA uses the Seurat Idents as the group.
-#' @param multi.group.by A string containing the name of a column in the Seurat object with groups for consensus WGCNA (dataset, sample, condition, etc)
-#' @param multi_groups A character vecrtor containing the names of groups to select
-#' @param assay The name of the assay in the Seurat object
-#' @param slot The name of the slot in the Seurat object (counts, data)
-#' @param layer Layer to extract data for aggregation. Default = 'counts'. Layer is used with Seurat v5 instead of slot.
-#' @param mat A Matrix containing gene expression data. Supplying a matrix using this parameter ignores other options. This is almost exclusively used for pseudobulk analysis.
-#' @param wgcna_name A string containing the name of the WGCNA slot in seurat_obj@misc. Default = NULL which retrieves the currently active WGCNA data
+#' @param seurat_obj 一个 Seurat 对象
+#' @param group_name 一个字符串，包含提供的 group.by 列中或 Seurat Idents 中的一个组。
+#' @param use_metacells 一个逻辑值，确定我们是使用元细胞 (TRUE) 还是完整的表达矩阵 (FALSE)
+#' @param group.by 一个字符串，包含 Seurat 对象中具有细胞组（簇、细胞类型等）的列的名称。如果为 NULL（默认值），hdWGCNA 使用 Seurat Idents 作为组。
+#' @param multi.group.by 一个字符串，包含 Seurat 对象中具有用于共识 WGCNA 的组（数据集、样本、条件等）的列的名称
+#' @param multi_groups 一个字符向量，包含要选择的组的名称
+#' @param assay Seurat 对象中分析的名称
+#' @param slot Seurat 对象中插槽的名称（counts、data）
+#' @param layer 用于提取聚合数据的层。默认 = 'counts'。层与 Seurat v5 一起使用，而不是插槽。
+#' @param mat 一个包含基因表达数据的矩阵。使用此参数提供矩阵会忽略其他选项。这几乎专门用于伪批量分析。
+#' @param wgcna_name 一个字符串，包含 seurat_obj@misc 中 WGCNA 插槽的名称。默认 = NULL，它检索当前活动的 WGCNA 数据
 #' @keywords scRNA-seq
 #' @export
 SetMultiExpr <- function(
@@ -391,44 +389,44 @@ SetMultiExpr <- function(
     mat_group_delim = 3,
     wgcna_name = NULL,
     ...) {
-  # get data from active assay if wgcna_name is not given
+  # 如果未提供 wgcna_name，则从活动分析中获取数据
   if (is.null(wgcna_name)) {
     wgcna_name <- seurat_obj@misc$active_wgcna
   }
   CheckWGCNAName(seurat_obj, wgcna_name)
 
-  # get the WGCNA genes:
+  # 获取 WGCNA 基因：
   params <- GetWGCNAParams(seurat_obj, wgcna_name)
   gene_names <- GetWGCNAGenes(seurat_obj, wgcna_name)
 
   s_obj <- seurat_obj
 
-  # get assay
+  # 获取分析
   if (is.null(assay)) {
     assay <- DefaultAssay(s_obj)
-    warning(paste0("assay not specified, trying to use assay ", assay))
+    warning(paste0("未指定分析，尝试使用分析 ", assay))
   }
 
-  # get the different groups present if not specified by the user:
+  # 如果用户未指定，则获取存在的不同组：
   if (is.null(multi_groups)) {
     multi_groups <- as.character(unique(s_obj@meta.data[[multi.group.by]]))
   } else {
     seurat_groups <- as.character(unique(s_obj@meta.data[[multi.group.by]]))
     if (sum(multi_groups %in% seurat_groups) != length(multi_groups)) {
-      stop("Some or all groups specified in multi_groups not found in seurat_obj@meta.data[,multi.group.by]")
+      stop("在 seurat_obj@meta.data[,multi.group.by] 中未找到 multi_groups 中指定的某些或所有组")
     }
   }
 
-  # was a matrix supplied?
+  # 是否提供了矩阵？
   if (is.null(mat)) {
-    # use metacells or whole seurat object?
+    # 使用元细胞还是整个 seurat 对象？
     if (use_metacells) {
       s_obj <- GetMetacellObject(seurat_obj, wgcna_name)
     } else {
       s_obj <- seurat_obj
     }
 
-    # get the datExpr for each group
+    # 获取每个组的 datExpr
     datExpr_list <- lapply(multi_groups, function(cur_group) {
       cur_datExpr <- SetDatExpr(
         seurat_obj,
@@ -454,22 +452,22 @@ SetMultiExpr <- function(
     }
   }
 
-  # convert to multiExpr, get good genes:
+  # 转换为 multiExpr，获取好基因：
   multiExpr <- WGCNA::list2multiData(datExpr_list)
   genes_use <- WGCNA::goodGenesMS(multiExpr)
   gene_names <- gene_names[genes_use]
 
-  # subset the multiExpr by the good genes::
+  # 按好基因对 multiExpr 进行子集化：
   datExpr_list <- lapply(1:length(multiExpr), function(i) {
     multiExpr[[i]]$data[, genes_use]
   })
   multiExpr <- WGCNA::list2multiData(datExpr_list)
   names(multiExpr) <- multi_groups
 
-  # update the WGCNA gene list:
+  # 更新 WGCNA 基因列表：
   seurat_obj <- SetWGCNAGenes(seurat_obj, gene_names, wgcna_name)
 
-  # set the multiExpr in the Seurat object
+  # 在 Seurat 对象中设置 multiExpr
   seurat_obj@misc[[wgcna_name]]$multiExpr <- multiExpr
   seurat_obj
 }
@@ -477,13 +475,13 @@ SetMultiExpr <- function(
 
 #' GetMultiExpr
 #'
-#' This function gets the expression matrix from the metacell object.
+#' 此函数从元细胞对象获取表达矩阵。
 #'
-#' @param seurat_obj A Seurat object
+#' @param seurat_obj 一个 Seurat 对象
 #' @keywords scRNA-seq
 #' @export
 GetMultiExpr <- function(seurat_obj, wgcna_name = NULL) {
-  # get data from active assay if wgcna_name is not given
+  # 如果未提供 wgcna_name，则从活动分析中获取数据
   if (is.null(wgcna_name)) {
     wgcna_name <- seurat_obj@misc$active_wgcna
   }
