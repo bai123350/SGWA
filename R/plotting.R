@@ -1035,8 +1035,8 @@ ModuleNetworkPlot <- function(
     edge_df$color_alpha <- alpha(cur_color, alpha = edge_df$value)
 
     # top 10 as center
-    gA <- graph.adjacency(as.matrix(reducedTOM[1:n_inner, 1:n_inner]), mode = "undirected", weighted = TRUE, diag = FALSE)
-    gB <- graph.adjacency(as.matrix(reducedTOM[(n_inner + 1):n_genes, (n_inner + 1):n_genes]), mode = "undirected", weighted = TRUE, diag = FALSE)
+    gA <- graph_from_adjacency_matrix(as.matrix(reducedTOM[1:n_inner, 1:n_inner]), mode = "undirected", weighted = TRUE, diag = FALSE)
+    gB <- graph_from_adjacency_matrix(as.matrix(reducedTOM[(n_inner + 1):n_genes, (n_inner + 1):n_genes]), mode = "undirected", weighted = TRUE, diag = FALSE)
     layoutCircle <- rbind(layout.circle(gA) / 2, layout.circle(gB))
 
     g1 <- igraph::graph_from_data_frame(

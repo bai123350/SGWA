@@ -18,6 +18,8 @@
 #' @param network_type The type of network to construct (e.g., "signed").
 #' @param n_hubs The number of hub genes to identify per module.
 #' @param n_genes_score The number of genes to use for module scoring.
+#' @param meta_yazu The metadata column for grouping in radar plots.
+#' @param dot_plot_group The metadata column to use for the dot plot.
 #' @param assay The assay to use for expression data.
 #' @param plot_path The directory path to save the output plots.
 #' @param plot_height The height of the saved plots in inches.
@@ -54,6 +56,7 @@ run_sgwgcna_pipeline <- function(
     n_genes_score = 25,
     assay = NULL,
     meta_yazu = "sample",
+    dot_plot_group = "sample",
     plot_path = "./plots/",
     plot_height = 10,
     plot_width = 10,
@@ -230,7 +233,7 @@ run_sgwgcna_pipeline <- function(
   seurat_obj@meta.data <- cbind(seurat_obj@meta.data, MEs)
 
   # plot with Seurat's DotPlot function
-  p <- DotPlot(seurat_obj, features = mods, group.by = metacell_ident.group1)
+  p <- DotPlot(seurat_obj, features = mods, group.by = dot_plot_group)
 
   p <- p +
     RotatedAxis() +
