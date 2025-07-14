@@ -42,15 +42,15 @@ run_sgwgcna_pipeline <- function(
     gene_select = "fraction",
     fraction = 0.05,
     wgcna_name = "ASC_consensus",
-    metacell_group.by = c("SCT_snn_res.0.5", "sample"),
-    metacell_ident.group1 = "SCT_snn_res.0.5",
+    metacell_group.by = c("celltype", "sample"),
+    metacell_ident.group1 = "celltype",
     metacell_ident.group2 = "sample",
     k = 25,
     max_shared = 12,
     min_cells = 50,
     target_metacells = 250,
     reduction = "harmony",
-    dat_expr_group_name = "1",
+    dat_expr_group_name = "B cell",
     network_type = "signed",
     n_hubs = 10,
     n_genes_score = 25,
@@ -170,6 +170,7 @@ run_sgwgcna_pipeline <- function(
   # get hub genes
   hub_df <- GetHubGenes(seurat_obj, n_hubs = n_hubs)
   print(head(hub_df))
+  write.csv(hub_df, file.path(plot_path, "hub_genes.csv"))
 
   # compute gene scoring for the top hub genes by kME for each module
   seurat_obj <- ModuleExprScore(
@@ -246,4 +247,111 @@ run_sgwgcna_pipeline <- function(
   )
 
   return(seurat_obj)
+}
+
+#' Plot Module Networks and UMAPs
+#'
+#' This function generates and plots various network visualizations and UMAPs for WGCNA modules.
+#'
+#' @param seurat_obj A Seurat object with WGCNA results.
+#' @param plot_path The directory path to save the output plots.
+#' @export
+plot_module_networks <- function(seurat_obj, plot_path = "./plots/") {
+  # Create plot directory if it doesn't exist
+  if (!dir.exists(plot_path)) {
+    dir.create(plot_path, recursive = TRUE)
+  }
+
+  # Plot module network with default parameters
+  ModuleNetworkPlot(
+    seurat_obj,
+    outdir = file.path(plot_path, 'ModuleNetworks')
+  )
+
+  # Plot module network with custom parameters
+  ModuleNetworkPlot(
+    seurat_obj,
+    outdir = file.path(plot_path, 'ModuleNetworks2'), # new folder name
+    n_inner = 20, # number of genes in inner ring
+    n_outer = 30, # number of genes in outer ring
+    n_conns = Inf, # show all of the connections
+    plot_size = c(10, 10), # larger plotting area
+    vertex.label.cex = 1 # font size
+  )
+
+  # Create plot_path and plot_path/modules directories if they don't exist
+
+  modules_dir <- file.path(plot_path, "modules")
+  if (!dir.exists(modules_dir)) {
+    dir.create(modules_dir, recursive = TRUE)
+  }
+
+  pdf(file.path(plot_path, "modules", "HubGeneNetworkPlot_all_modules.pdf"))
+  HubGeneNetworkPlot(
+    seurat_obj,
+    n_hubs = 3, n_other = 5,
+    edge_prop = 0.75,
+    mods = 'all'
+  )
+  dev.off()
+  # Hubgene network plot with default module selection
+  pdf(file.path(plot_path, "modules","HubGeneNetworkPlot_all_modules.pdf"))
+  HubGeneNetworkPlot(
+    seurat_obj,
+    n_hubs = 3, n_other = 5,
+    edge_prop = 0.75,
+    mods = 'all'
+  )
+  dev.off()
+
+  # Generate and store hub gene network graph
+  g <- HubGeneNetworkPlot(seurat_obj, return_graph = TRUE)
+
+  # Get module list
+  modules <- GetModules(seurat_obj)
+  mods <- levels(modules$module)
+  mods <- mods[mods != 'grey']
+
+  # Hubgene network plot with a subset of modules
+  pdf(file.path(plot_path, "modules","HubGeneNetworkPlot_top5_modules.pdf"))
+  HubGeneNetworkPlot(
+    seurat_obj,
+    n_hubs = 10, n_other = 20,
+    edge_prop = 0.75,
+    mods = mods[1:5] # only select 5 modules
+  )
+  dev.off()
+
+  # Run UMAP on module hub genes
+  seurat_obj <- RunModuleUMAP(
+    seurat_obj,
+    n_hubs = 10, # number of hub genes to include for the UMAP embedding
+    n_neighbors = 15, # neighbors parameter for UMAP
+    min_dist = 0.1 # min distance between points in UMAP space
+  )
+
+  # Get the hub gene UMAP table from the seurat object
+  umap_df <- GetModuleUMAP(seurat_obj)
+
+  # Plot UMAP with ggplot
+  p <- ggplot(umap_df, aes(x = UMAP1, y = UMAP2)) +
+    geom_point(
+      color = umap_df$color, # color each point by WGCNA module
+      size = umap_df$kME * 2 # size of each point based on intramodular connectivity
+    ) +
+    umap_theme()
+  ggsave(file.path(plot_path, "modules","ModuleUMAP_ggplot.pdf"), plot = p)
+
+
+  # Plot module UMAP with network connections
+  pdf(file.path(plot_path, "modules","ModuleUMAPPlot_network.pdf"))
+  ModuleUMAPPlot(
+    seurat_obj,
+    edge.alpha = 0.25,
+    sample_edges = TRUE,
+    edge_prop = 0.1, # proportion of edges to sample (10% here)
+    label_hubs = 2, # how many hub genes to plot per module?
+    keep_grey_edges = FALSE
+  )
+  dev.off()
 }

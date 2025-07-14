@@ -3126,10 +3126,10 @@ ModuleRadarPlot <- function(
 
   # are we subsetting?
   if (!is.null(barcodes)) {
-    if (!(all(barcodes %in% colnames(seurat_obj)))) {
-      stop("Invalid selection for barcodes, some are not found in the colnames(seurat_obj)")
+    barcodes <- intersect(barcodes, colnames(seurat_obj))
+    if (length(barcodes) == 0) {
+      stop("No valid barcodes provided.")
     }
-
     # subset:
     MEs <- MEs[barcodes, ]
     meta <- meta[barcodes, ]
