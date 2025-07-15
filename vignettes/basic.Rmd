@@ -1,0 +1,61 @@
+---
+title: "SGWA Basic Usage"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{SGWA Basic Usage}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, setup}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+## SGWA Pipeline Example
+
+This vignette shows an example of how to run the main SGWA pipeline function, `run_sgwgcna_pipeline`.
+
+```{r, eval=FALSE}
+# Load libraries
+library(SGWA)
+library(Seurat)
+
+# This example assumes 'seurat_obj' is your pre-processed Seurat object.
+# Pre-processing steps like normalization, scaling, and dimensionality reduction
+# should be completed beforehand.
+
+# run_sgwgcna_pipeline provides a comprehensive workflow for WGCNA on single-cell data.
+# It starts by constructing metacells, then builds the co-expression network,
+# identifies modules, and performs downstream analysis like hub gene identification
+# and module scoring.
+# The results are stored back into the Seurat object.
+
+seurat_obj <- run_sgwgcna_pipeline(
+    seurat_obj,
+    gene_select = "fraction",
+    fraction = 0.05,
+    wgcna_name = "ASC_consensus",
+    metacell_group.by = c("celltype", "sample"),
+    metacell_ident.group1 = "celltype",
+    metacell_ident.group2 = "sample",
+    k = 25,
+    max_shared = 12,
+    min_cells = 50,
+    target_metacells = 250,
+    reduction = "harmony",
+    dat_expr_group_name = "B cell",
+    network_type = "signed",
+    n_hubs = 20,
+    n_genes_score = 25,
+    assay = NULL,
+    meta_yazu = "sample",
+    dot_plot_group = "sample",
+    plot_path = "./plots/",
+    plot_height = 10,
+    plot_width = 10,
+    cols = 6
+)
+```
