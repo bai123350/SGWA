@@ -7,4 +7,5 @@
 ^TOM$
 ^enrichr_plots$
 ^plots$
- ^workspace\.RData$
+^workspace\.RData$
+^README.md$
