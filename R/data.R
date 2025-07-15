@@ -8,4 +8,3 @@
 #'   \item{RNA}{RNA assay with 1000 features and 200 cells}
 #' }
 #' @source Generated from `tmp/seurat_data.R`
-"seurat"

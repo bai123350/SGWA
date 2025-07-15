@@ -222,7 +222,7 @@ PlotDendrogram <- function(
 #' @keywords scRNA-seq
 #' @export
 #' @examples
-#' MECorrelogram
+#' ModuleCorrelogram
 ModuleCorrelogram <- function(
     seurat_obj, MEs2 = NULL,
     features = "hMEs",
@@ -2266,7 +2266,6 @@ PlotKMEs <- function(
 #' @examples
 #' # Example usage:
 #' # Assuming `seurat_obj` is your Seurat object and `DMEs` is the output from FindDMEs
-#' PlotDMEsVolcano(seurat_obj, DMEs, wgcna_name = "MG")
 PlotDMEsVolcano <- function(
     seurat_obj,
     DMEs,
@@ -2497,8 +2496,6 @@ PlotDMEsLollipop <- function(
 #' @param pvalue p_value or fdr used for the comparison in the DMEs dataframe
 #' @keywords scRNA-seq
 #' @return A ggplot object
-#' @examples
-#' plot_list <- PlotLollipop(modules, DMEs, cur_title = c("Group1_vs_Group2"), pvalue, avg_log2FC = "avg_log2FC")
 PlotLollipop <- function(
     modules,
     cur_DMEs,

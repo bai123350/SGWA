@@ -1,3 +1,10 @@
 ^SGWA\.Rproj$
 ^\.Rproj\.user$
 ^LICENSE\.md$
+^\.lintr$
+^\.vscode$
+^tmp$
+^TOM$
+^enrichr_plots$
+^plots$
+ ^workspace\.RData$

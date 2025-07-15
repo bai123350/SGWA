@@ -52,7 +52,7 @@ run_sgwgcna_pipeline <- function(
     reduction = "harmony",
     dat_expr_group_name = "B cell",
     network_type = "signed",
-    n_hubs = 10,
+    n_hubs = 20,
     n_genes_score = 25,
     assay = NULL,
     meta_yazu = "sample",
